@@ -2,23 +2,32 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+Clone the repo:
+
+```bash
+git clone git@github.com:citizenwallet/connected-wallet-example.git
+
+cd connected-wallet-example
+```
+
+Install modules:
+```bash
+npm i
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open with Citizen Wallet
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+http://{your local ip}:3000 # put this in a QR code
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# make sure you are on the same wifi with your phone that is running Citizen Wallet as your laptop that is running this example
+```
 
 ## Learn More
 
