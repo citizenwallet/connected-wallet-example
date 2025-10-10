@@ -21,7 +21,7 @@ Run the development server:
 npm run dev
 ```
 
-Open with Citizen Wallet
+Open with Citizen Wallet in the BREAD Community
 
 ```bash
 http://{your local ip}:3000 # put this in a QR code
