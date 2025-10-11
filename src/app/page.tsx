@@ -1,4 +1,5 @@
 import {
+  generateCalldataLink,
   generateReceiveLink,
   getAccountBalance,
   getProfileFromAddress,
@@ -8,6 +9,8 @@ import { CommunityConfig } from "@citizenwallet/sdk";
 import Image from "next/image";
 import CommunityJson from "../cw/community.json";
 import Link from "next/link";
+import OpenInWallet from "./open-in-wallet";
+import ActionButtons from "./action-buttons";
 
 export default async function UserProfile({
   searchParams,
@@ -24,16 +27,22 @@ export default async function UserProfile({
 
   const params = new URLSearchParams(await searchParams);
 
-  const { sigAuthRedirect } = await searchParams;
-  if (!sigAuthRedirect) {
-    return <div>Invalid URL</div>;
+  const { sigAuthAccount, sigAuthExpiry, sigAuthSignature, sigAuthRedirect } =
+    await searchParams;
+  if (
+    !sigAuthRedirect ||
+    !sigAuthAccount ||
+    !sigAuthExpiry ||
+    !sigAuthSignature
+  ) {
+    return <OpenInWallet />;
   }
 
   // null if invalid
   // will return the account owner's address
   const accountOwnerAddress = await verifyConnectedUrl(community, { params });
   if (!accountOwnerAddress) {
-    return <div>Invalid URL</div>;
+    return <div>Invalid account owner address</div>;
   }
 
   // can get the profile from the address
@@ -61,6 +70,23 @@ export default async function UserProfile({
     "100", // in cents
     "test transaction"
   );
+
+  const contractAddress = "0x388C1B75A832B9e5a0905BC7B41178C0cedA8ff5";
+  const calldata =
+    "0xb61d27f6000000000000000000000000388c1b75a832b9e5a0905bc7b41178c0ceda8ff50000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000240121b93f000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000";
+
+  const requestCalldataLink = generateCalldataLink(
+    sigAuthRedirect,
+    community,
+    contractAddress,
+    BigInt(0),
+    calldata
+  );
+
+  const successLink = encodeURIComponent(
+    "https://connected-wallet-example.vercel.app/success"
+  );
+  const closeLink = encodeURIComponent(`${sigAuthRedirect}/close`);
 
   // Dummy user data
   const user = {
@@ -148,14 +174,11 @@ export default async function UserProfile({
             </p>
           </div>
 
-          {/* Request Token Button */}
-          <div className="mb-6">
-            <Link href={requestTokenLink}>
-              <button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-colors">
-                Request 1 {token.symbol}
-              </button>
-            </Link>
-          </div>
+          <ActionButtons
+            requestTokenLink={`${requestTokenLink}&success=${successLink}&close=${closeLink}`}
+            requestCalldataLink={`${requestCalldataLink}&success=${successLink}&close=${closeLink}`}
+            symbol={token.symbol}
+          />
         </div>
       </div>
     </div>
