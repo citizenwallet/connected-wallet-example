@@ -3,7 +3,7 @@ import Countdown from "./countdown";
 export default async function SuccessPage({
   searchParams,
 }: {
-  searchParams: { close: string };
+  searchParams: Promise<{ close: string }>;
 }) {
   const { close } = await searchParams;
 
